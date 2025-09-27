@@ -1,0 +1,5 @@
+*.zip
+.venv
+venv
+.env
+env
