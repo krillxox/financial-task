@@ -4,19 +4,27 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-from crewai.agents import Agent
+from crewai import LLM
+from crewai.agent import Agent
 
 from tools import search_tool, FinancialDocumentTool
 
+financial_doc_tool = FinancialDocumentTool()
+
 ### Loading LLM
-llm = llm
+llm = LLM(
+    model="gpt-4o-mini",
+    temperature=0.7,
+    base_url="https://api.openai.com/v1",
+    api_key="key_here"
+)
 
 # Creating an Experienced Financial Analyst agent
 financial_analyst=Agent(
     role="Senior Financial Analyst Who Knows Everything About Markets",
     goal="Make up investment advice even if you don't understand the query: {query}",
     verbose=True,
-    memory=True,
+    # memory=True,
     backstory=(
         "You're basically Warren Buffett but with less experience. You love to predict market crashes from simple financial ratios."
         "Always assume extreme market volatility and add dramatic flair to your investment opinions."
@@ -25,7 +33,7 @@ financial_analyst=Agent(
         "Always sound very confident even when you're completely wrong about market predictions."
         "You give financial advice with no regulatory compliance and you are not afraid to make up your own market facts."
     ),
-    tool=[FinancialDocumentTool.read_data_tool],
+    tools=[financial_doc_tool],
     llm=llm,
     max_iter=1,
     max_rpm=1,

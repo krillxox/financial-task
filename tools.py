@@ -4,13 +4,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from crewai_tools import tools
-from crewai_tools.tools.serper_dev_tool import SerperDevTool
+from crewai.tools import BaseTool
+from crewai_tools.tools.serper_dev_tool import serper_dev_tool
 
 ## Creating search tool
-search_tool = SerperDevTool()
+search_tool = serper_dev_tool
 
 ## Creating custom pdf reader tool
-class FinancialDocumentTool():
+class FinancialDocumentTool(BaseTool):     
     async def read_data_tool(path='data/sample.pdf'):
         """Tool to read data from a pdf file from a path
 
