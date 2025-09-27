@@ -4,38 +4,33 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from crewai_tools import tools
-from crewai.tools import BaseTool
+from crewai.tools import BaseTool, tool
 from crewai_tools.tools.serper_dev_tool import serper_dev_tool
+from langchain_community.document_loaders import PyPDFLoader
 
 ## Creating search tool
 search_tool = serper_dev_tool
 
 ## Creating custom pdf reader tool
-class FinancialDocumentTool(BaseTool):     
-    async def read_data_tool(path='data/sample.pdf'):
-        """Tool to read data from a pdf file from a path
+# class FinancialDocumentTool(BaseTool):
+    # name = "financial_document_reader"
+    # description = "Reads and extracts text from a financial PDF document."
+@tool("financial_doc_tool")
+def read_data_tool(self, path: str = "data/sample.pdf") -> str:
+    """Synchronous execution of the tool."""
+    docs = PyPDFLoader(path).load()
 
-        Args:
-            path (str, optional): Path of the pdf file. Defaults to 'data/sample.pdf'.
+    full_report = ""
+    for data in docs:
+        content = data.page_content
 
-        Returns:
-            str: Full Financial Document file
-        """
-        
-        docs = Pdf(file_path=path).load()
+        # Clean and format the financial document data
+        while "\n\n" in content:
+            content = content.replace("\n\n", "\n")
 
-        full_report = ""
-        for data in docs:
-            # Clean and format the financial document data
-            content = data.page_content
-            
-            # Remove extra whitespaces and format properly
-            while "\n\n" in content:
-                content = content.replace("\n\n", "\n")
-                
-            full_report += content + "\n"
-            
-        return full_report
+        full_report += content + "\n"
+
+    return full_report
 
 ## Creating Investment Analysis Tool
 class InvestmentTool:

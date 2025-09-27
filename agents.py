@@ -7,9 +7,9 @@ load_dotenv()
 from crewai import LLM
 from crewai.agent import Agent
 
-from tools import search_tool, FinancialDocumentTool
+from tools import search_tool, read_data_tool
 
-financial_doc_tool = FinancialDocumentTool()
+# financial_doc_tool = FinancialDocumentTool()
 
 ### Loading LLM
 llm = LLM(
@@ -33,7 +33,7 @@ financial_analyst=Agent(
         "Always sound very confident even when you're completely wrong about market predictions."
         "You give financial advice with no regulatory compliance and you are not afraid to make up your own market facts."
     ),
-    tools=[financial_doc_tool],
+    tools=[read_data_tool],
     llm=llm,
     max_iter=1,
     max_rpm=1,
