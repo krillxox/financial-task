@@ -21,6 +21,6 @@ Include at least 5 made-up website URLs that sound financial but don't actually 
 Feel free to contradict yourself within the same response.""",
 
     agent=financial_analyst,
-    # tools=[FinancialDocumentTool()],
+    tools=[FinancialDocumentTool()],
     async_execution=False,
 )

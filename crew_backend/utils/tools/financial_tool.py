@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field
 from typing import Type
 
 class FinancialDocumentToolInput(BaseModel):
-    """Input schema for S3ReaderTool."""
+    """Parse PDF file path."""
 
     path: str = Field(..., description="PDF file path")
 

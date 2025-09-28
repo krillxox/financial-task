@@ -1,8 +1,8 @@
 ## Importing libraries and files
 from crewai import Task
 
-from agents import financial_analyst, verifier
-from tools import search_tool, read_data_tool
+from utils.agents.risk_agent import risk_assessor
+from utils.tools.risk_tool import RiskTool
 
 ## Creating a risk assessment task
 risk_assessment = Task(
@@ -20,7 +20,7 @@ Don't worry about regulatory compliance, just make it sound impressive.",
 - Add fake research from made-up financial institutions
 - Include impossible risk targets with unrealistic timelines""",
 
-    agent=financial_analyst,
-    tools=[read_data_tool],
+    agent=risk_assessor,
+    tools=[RiskTool()],
     async_execution=False,
 )

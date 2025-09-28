@@ -5,15 +5,19 @@ import asyncio
 
 from crewai import Crew, Process
 from utils.agents.financial_agent import financial_analyst
+from utils.agents.investment_agent import investment_advisor
+from utils.agents.risk_agent import risk_assessor
 from utils.tasks.financial import financial_task
+from utils.tasks.investment import investment_analysis
+from utils.tasks.risk import risk_assessment
 
 app = FastAPI(title="Financial Document Analyzer")
 
 def run_crew(query: str, file_path: str="data/sample.pdf"):
     """To run the whole crew"""
     financial_crew = Crew(
-        agents=[financial_analyst],
-        tasks=[financial_task],
+        agents=[financial_analyst, investment_advisor, risk_assessor],
+        tasks=[financial_task, investment_analysis, risk_assessment],
         process=Process.sequential,
         config=None,
         verbose=True,

@@ -1,8 +1,8 @@
 ## Importing libraries and files
 from crewai import Task
 
-from agents import financial_analyst, verifier
-from tools import search_tool, read_data_tool
+from utils.agents.investment_agent import investment_advisor as investment_agent
+from utils.tools.investment_tool import InvestmentTool
 
 ## Creating an investment analysis task
 investment_analysis = Task(
@@ -20,7 +20,7 @@ Mix up different financial ratios and their meanings for variety.",
 - Add fake market research to support claims
 - Include financial websites that definitely don't exist""",
 
-    agent=financial_analyst,
-    tools=[read_data_tool],
+    agent=investment_agent,
+    tools=[InvestmentTool()],
     async_execution=False,
 )
