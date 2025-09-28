@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
-  const [query, setQuery] = useState<string | null>(null);
+  const [query, setQuery] = useState<string>("");
   const [analysis, setAnalysis] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -14,13 +14,18 @@ export default function Home() {
     formData.append("file", file);
     formData.append("query", query)
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/analyze`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/analyze`, {
         method: "POST", 
         body: formData, 
         // headers: { "Content-Type": "multipart/form-data" },
         credentials: "include"
     });
-      setAnalysis(res?.data?.result);
+      if(response.ok){
+        const data = await response.json()
+        console.log(data);
+        
+        setAnalysis(data?.result.analysis);
+      }
     } catch (err) {
       console.error(err);
       alert("Analysis failed");
@@ -36,9 +41,9 @@ export default function Home() {
         <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Analyze</button>
       </form>
       {analysis && (
-        <div className="bg-gray-100 p-4 rounded">
+        <div className="bg-gray-100 p-4 rounded w-3/4">
           <h2 className="font-bold mb-2">Analysis Result:</h2>
-          <pre>{analysis}</pre>
+          <pre className="h-full w-full overflow-auto">{analysis}</pre>
         </div>
       )}
     </div>

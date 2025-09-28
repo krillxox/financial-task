@@ -14,6 +14,7 @@ export class AnalyzeController {
     // Call your FastAPI endpoint here
     
     const result = await this.analyzeService.callFastAPI(file, query);
+
     return { result };
   }
 }

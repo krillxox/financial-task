@@ -16,8 +16,10 @@ app = FastAPI(title="Financial Document Analyzer")
 def run_crew(query: str, file_path: str="data/sample.pdf"):
     """To run the whole crew"""
     financial_crew = Crew(
+        # agents=[financial_analyst],
         agents=[financial_analyst, investment_advisor, risk_assessor],
         tasks=[financial_task, investment_analysis, risk_assessment],
+        # tasks=[financial_task],
         process=Process.sequential,
         config=None,
         verbose=True,
