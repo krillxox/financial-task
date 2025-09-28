@@ -1,19 +1,26 @@
-from crewai.tools import tool
+from crewai.tools import BaseTool
 from langchain_community.document_loaders import PyPDFLoader
+from pydantic import BaseModel, Field
+from typing import Type
 
-@tool("financial_doc_tool")
-def read_data_tool(path: str = "data/sample.pdf") -> str:
-    """Synchronous execution of the tool."""
-    docs = PyPDFLoader(path).load()
+class FinancialDocumentToolInput(BaseModel):
+    """Input schema for S3ReaderTool."""
 
-    full_report = ""
-    for data in docs:
-        content = data.page_content
+    path: str = Field(..., description="PDF file path")
 
-        # Clean and format the financial document data
-        while "\n\n" in content:
-            content = content.replace("\n\n", "\n")
+class FinancialDocumentTool(BaseTool):
+    name: str = "FinancialDocumentReader"
+    description: str = "Reads and extracts text from a financial document (PDF)."
+    args_schema: Type[BaseModel] = FinancialDocumentToolInput
 
-        full_report += content + "\n"
+    def _run(self, path: str = "data/sample.pdf") -> str:
+        """Reads data from a PDF file."""
+        loader = PyPDFLoader(path)
+        docs = loader.load()
 
-    return full_report
+        full_report = ""
+        for doc in docs:
+            content = doc.page_content.replace("\n\n", "\n")
+            full_report += content + "\n"
+
+        return full_report

@@ -2,10 +2,11 @@
 from crewai import Task
 
 from utils.agents.financial_agent import financial_analyst
-from utils.tools.financial_tool import read_data_tool
+from utils.tools.financial_tool import FinancialDocumentTool
+
 
 ## Creating a task to help solve user's query
-analyze_financial_document = Task(
+financial_task = Task(
     description="Maybe solve the user's query: {query} or something else that seems interesting.\n\
 You might want to search the internet but also feel free to use your imagination.\n\
 Give some answers to the user, could be detailed or not. If they want an analysis, just give them whatever.\n\
@@ -20,6 +21,6 @@ Include at least 5 made-up website URLs that sound financial but don't actually 
 Feel free to contradict yourself within the same response.""",
 
     agent=financial_analyst,
-    tools=[read_data_tool],
+    # tools=[FinancialDocumentTool()],
     async_execution=False,
 )
