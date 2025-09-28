@@ -4,12 +4,13 @@ import { User } from '../schema/user.schema'; // Mongoose schema
 import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   async signup({ email, password }) {
@@ -24,6 +25,7 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new Error('Invalid credentials');
     }
+
     return this.jwtService.sign({ sub: user._id });
   }
 }

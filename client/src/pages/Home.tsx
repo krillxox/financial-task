@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
+  const [query, setQuery] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -11,12 +12,13 @@ export default function Home() {
 
     const formData = new FormData();
     formData.append("file", file);
-
+    formData.append("query", query)
     try {
-      const res = await fetch("/analyze", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/analyze`, {
         method: "POST", 
         body: formData, 
-        headers: { "Content-Type": "multipart/form-data" } 
+        // headers: { "Content-Type": "multipart/form-data" },
+        credentials: "include"
     });
       setAnalysis(res?.data?.result);
     } catch (err) {
@@ -26,10 +28,11 @@ export default function Home() {
   };
 
   return (
-    <div className="p-8">
+    <div className="h-full w-full flex flex-col items-center justify-center p-8">
       <h1 className="text-3xl font-bold mb-6">Upload Financial PDF for Analysis</h1>
-      <form onSubmit={handleSubmit} className="mb-6">
-        <input type="file" accept="application/pdf" onChange={e => setFile(e.target.files?.[0] ?? null)} required/>
+      <form onSubmit={handleSubmit} className="h-1/2 w-1/2 mb-6 flex flex-col items-center justify-around">
+        <input className="p-4 gap-2 border-2 rounded-md w-full" type="file" accept="application/pdf" onChange={e => setFile(e.target.files?.[0] ?? null)} required/>
+        <input className="p-4 gap-2 border-2 rounded-md w-full" type="text" onChange={e => setQuery(e.target.value)} placeholder="Enter query"/>
         <button type="submit" className="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Analyze</button>
       </form>
       {analysis && (

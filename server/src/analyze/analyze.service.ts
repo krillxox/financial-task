@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import FormData from 'form-data';
+import { fetch, FormData } from 'undici';
+// import FormData from 'form-data';
 
 @Injectable()
 export class AnalyzeService {
-  async callFastAPI(file: Express.Multer.File) {
+  async callFastAPI(file: Express.Multer.File, query: string) {
     const formData = new FormData();
-    formData.append('file', file.buffer, file.originalname);
+    console.log(file);
+    const uint8Array = new Uint8Array(file.buffer);
+    formData.set('file', new File([uint8Array], file.originalname));
+    formData.set('query', query);
 
-    const response = await axios.post('http://localhost:8000/analyze', formData, {
-      headers: formData.getHeaders(),
+    const response = await fetch('http://localhost:8000/analyze', {
+      method: 'POST',
+      body: formData,
     });
 
-    return response.data;
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
   }
 }

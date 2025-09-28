@@ -9,10 +9,17 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
+    //   method: "POST"
+    // })
     try {
-      await fetch("/auth/login", { 
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, { 
         method: "POST",
-        body: JSON.stringify({ email, password }), 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: "include"  
     });
       navigate("/");
     } catch (err) {

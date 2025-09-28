@@ -32,24 +32,23 @@ async def root():
 
 @app.post("/analyze")
 async def analyze_financial_document(
-    # file: UploadFile = File(...),
+    file: UploadFile = File(...),
     query: str = Form(default="Analyze this financial document for investment insights")
 ):
     """Analyze financial document and provide comprehensive investment recommendations"""
-    
+    content = await file.read()
     file_id = str(uuid.uuid4())
-    # file_path = f"data/financial_document_{file_id}.pdf"
-    print(os.getcwd())
-    file_path = "./data/TSLA-Q2-2025-Update.pdf"
-    
+    file_path = f"./data/{file_id}.pdf"
+    # file_path = "./data/TSLA-Q2-2025-Update.pdf"
+    # return "file_path"
     try:
         # Ensure data directory exists
         os.makedirs("data", exist_ok=True)
         
         # Save uploaded file
-        # with open(file_path, "wb") as f:
-        #     content = await f.read()
-        #     f.write(content)
+        with open(file_path, "wb") as f:
+            f.write(content)
+        # return "saved"
         
         # Validate query
         if query=="" or query is None:
@@ -62,7 +61,7 @@ async def analyze_financial_document(
             "status": "success",
             "query": query,
             "analysis": str(response),
-            # "file_processed": file.filename
+            "file_processed": file.filename
         }
         
     except Exception as e:

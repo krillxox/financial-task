@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Res, Req, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, Req, UseGuards, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response, Request } from 'express';
+import type { Response, Request } from 'express';
 import { JwtAuthGuard } from './jwt.strategy';
+import type { RequestWithUser } from 'src/interface/RequestWithUser';
 
 @Controller('auth')
 export class AuthController {
@@ -13,7 +14,10 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: { email: string; password: string }, @Res({ passthrough: true }) res: Response) {
+  async login(
+    @Body() body: { email: string; password: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const token = await this.authService.login(body);
     res.cookie('jwt', token, { httpOnly: true });
     return { message: 'Logged in' };
@@ -26,8 +30,8 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('check')
-  checkAuth(@Req() req: Request) {
+  @Get('check')
+  checkAuth(@Req() req: RequestWithUser) {
     return { authenticated: true, user: req.user };
   }
 }

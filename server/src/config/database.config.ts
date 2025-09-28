@@ -1,5 +1,4 @@
 import { MongooseModule } from '@nestjs/mongoose';
-console.log(process.env.MONGO_URI);
 
 export const DatabaseModule = MongooseModule.forRootAsync({
   useFactory: async () => ({

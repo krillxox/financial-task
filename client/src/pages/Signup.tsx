@@ -10,7 +10,7 @@ export default function Signup() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await fetch("/auth/signup", { 
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, { 
         method: "POST",
         body: JSON.stringify({ email, password }), 
     });
